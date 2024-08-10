@@ -157,7 +157,7 @@ def setup_function(
 
     # Build Weather
     my_weather = weather.Weather(
-        config=weather.WeatherConfig.get_default(weather.LocationEnum.GB),
+        config=weather.WeatherConfig.get_default(weather.LocationEnum.UKEG),
         my_simulation_parameters=my_simulation_parameters,
     )
 
