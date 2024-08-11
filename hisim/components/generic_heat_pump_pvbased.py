@@ -812,11 +812,7 @@ class GenericHeatPumpController(cp.Component):
 
         # Determine the mode based on GHI/DHI ratio
         if dhi > 0 and ghi / dhi >= 2:
-            max_temp = self.temperature_set_heating + 3
-            if temperature_mean_old < max_temp:
-                self.controller_heatpumpmode = "heating"
-            else:
-                self.controller_heatpumpmode = 'off'
+            self.controller_heatpumpmode = "heating"
         else:
             # Original control logic based on temperature and other factors
             if self.mode == 1:
