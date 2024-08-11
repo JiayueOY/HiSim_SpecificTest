@@ -89,7 +89,7 @@ class GenericHeatPumpControllerConfig(cp.ConfigBase):
         return GenericHeatPumpControllerConfig(
             name="HeatPumpController",
             temperature_air_heating_in_celsius=20.0,
-            temperature_air_cooling_in_celsius=30.0,
+            temperature_air_cooling_in_celsius=28.0,
             offset=0.5,
             mode=1,
         )
@@ -812,7 +812,11 @@ class GenericHeatPumpController(cp.Component):
 
         # Determine the mode based on GHI/DHI ratio
         if dhi > 0 and ghi / dhi >= 2:
-            self.controller_heatpumpmode = "heating"
+            max_temp = self.temperature_set_heating + 3
+            if temperature_mean_old < max_temp:
+                self.controller_heatpumpmode = "heating"
+            else:
+                self.controller_heatpumpmode = 'off'
         else:
             # Original control logic based on temperature and other factors
             if self.mode == 1:
@@ -823,8 +827,8 @@ class GenericHeatPumpController(cp.Component):
         # Set state output based on the mode
         if self.controller_heatpumpmode == "heating":
             state = 1
-        elif self.controller_heatpumpmode == "cooling":
-            state = -1
+        # elif self.controller_heatpumpmode == "cooling":
+        #     state = -1
         else:  # "off"
             state = 0
         stsv.set_output_value(self.state_channel, state)
