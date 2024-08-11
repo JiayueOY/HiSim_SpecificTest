@@ -89,7 +89,7 @@ class GenericHeatPumpControllerConfig(cp.ConfigBase):
         return GenericHeatPumpControllerConfig(
             name="HeatPumpController",
             temperature_air_heating_in_celsius=20.0,
-            temperature_air_cooling_in_celsius=30.0,
+            temperature_air_cooling_in_celsius=28.0,
             offset=0.5,
             mode=1,
         )
@@ -701,19 +701,25 @@ class GenericHeatPumpController(cp.Component):
             temperature_mean_old = stsv.get_input_value(self.temperature_mean_channel)
             electricity_input = stsv.get_input_value(self.electricity_input_channel)
 
-            # Check if it is noon
+            # Check if it is 10 AM
             hours_per_day = 24
             timesteps_per_hour = 3600 // self.my_simulation_parameters.seconds_per_timestep
             timestep_in_day = timestep % (hours_per_day * timesteps_per_hour)
-            timestep_at_noon = 12 * timesteps_per_hour
+            timestep_at_10am = 10 * timesteps_per_hour
+            timestep_at_2pm = 14 * timesteps_per_hour
 
-            if timestep_in_day == timestep_at_noon:
-                # Start heating mode at noon
-                self.controller_heatpumpmode = "heating"
-            elif self.controller_heatpumpmode == "heating":
-                max_temp = self.temperature_set_heating + 2
-                if temperature_mean_old >= max_temp:
-                    self.controller_heatpumpmode = "off"
+            if timestep_at_10am <= timestep_in_day < timestep_at_2pm:
+                # During 10 AM to 2 PM, heat if below set temperature + 3
+                max_temp = self.temperature_set_heating + 3
+                if temperature_mean_old < max_temp:
+                    self.controller_heatpumpmode = "heating"
+                else:
+                    self.controller_heatpumpmode = 'off'
+            elif timestep_in_day == timestep_at_2pm:
+                # At 2 PM, stop heating if not yet reached target + 3
+                max_temp = self.temperature_set_heating + 3
+                if self.controller_heatpumpmode == "heating" and temperature_mean_old < max_temp:
+                    self.controller_heatpumpmode = 'off'
             else:
                 # Use the original conditions based on the mode
                 if self.mode == 1:
