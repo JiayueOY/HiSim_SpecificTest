@@ -281,21 +281,7 @@ class LocationEnum(Enum):
         "London",
         "NSRDB_15min",
         "London",
-        "337089_51.49_-0.10_2019.csv",
-        WeatherDataSourceEnum.NSRDB_15MIN,
-    )
-    UKEG = (
-        "London",
-        "NSRDB_15min",
-        "London",
         "263928_55.97_-3.18_2022.csv",
-        WeatherDataSourceEnum.NSRDB_15MIN,
-    )
-    UKSC = (
-        "Edinburgh",
-        "NSRDB_15min",
-        "Edinburgh",
-        "355378_51.49_-0.14_2022.csv",
         WeatherDataSourceEnum.NSRDB_15MIN,
     )
     CY = (
