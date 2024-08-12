@@ -824,6 +824,8 @@ class GenericHeatPumpController(cp.Component):
                 elif hours == 13 and minutes == 30:
                     if self.controller_heatpumpmode == "heating" and temperature_mean_old > self.temperature_set_heating:
                         self.controller_heatpumpmode = 'off'
+                else:
+                    self.controller_heatpumpmode = 'off'
             else:
                 # Use the original conditions based on the mode
                 if self.mode == 1:
