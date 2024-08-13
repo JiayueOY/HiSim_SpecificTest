@@ -107,7 +107,12 @@ class PostProcessor:
         if PostProcessingOptions.PLOT_SINGLE_DAYS in ppdt.post_processing_options:
             log.information("Making single day plots.")
             start = timer()
-            self.make_single_day_plots(days, ppdt, report_image_entries=report_image_entries)
+            for date in ppdt.simulation_parameters.single_day_plot_dates:
+                days = {
+                    "day": date.day,
+                    "month": date.month
+                }
+                self.make_single_day_plots(days, ppdt, report_image_entries=report_image_entries)
             end = timer()
             duration = end - start
             log.information("Making single day plots took " + f"{duration:1.2f}s.")
