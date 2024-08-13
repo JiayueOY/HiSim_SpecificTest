@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.axis import Axis
 from matplotlib.dates import DateFormatter
 
+from hisim import log
 from hisim.postprocessing.chartbase import Chart, ChartFontsAndSize
 from hisim.postprocessing.report_image_entries import ReportImageEntry
 
