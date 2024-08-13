@@ -67,8 +67,16 @@ class ChartSingleDay(Chart, ChartFontsAndSize):
 
     def get_day_data(self):
         """Extracts data for a single day."""
-        firstindex = (self.month * 30 + self.day) * 24 * int(1 / self.time_correction_factor)
-        lastindex = firstindex + 24 * int(1 / self.time_correction_factor)
+        date_str = f"2021-{self.month:02d}-{self.day:02d}"
+        log.information(f"Attempting to extract data for date: {date_str}")
+
+        try:
+            single_day_data = self.data.loc[date_str]
+            log.information(f"Extracted data: {single_day_data.head()}")
+        except KeyError:
+            log.warning(f"No data found for date: {date_str}")
+            single_day_data = None
+
         day_number = self.day + 1
         if day_number == 1:
             ordinal = "st"
@@ -81,12 +89,30 @@ class ChartSingleDay(Chart, ChartFontsAndSize):
         date = f"{self.label_months_lowercase[self.month]} {day_number}{ordinal}"
         self.plot_title = f"{self.title} {date}"
 
-        if abs(lastindex - firstindex) < len(self.data):
-            data = self.data[firstindex:lastindex]
-            data_index = data.index[firstindex:lastindex]
-            data.index = data_index
-            return data
-        return self.data
+        return single_day_data
+
+    # def get_day_data(self):
+    #     """Extracts data for a single day."""
+    #     firstindex = (self.month * 30 + self.day) * 24 * int(1 / self.time_correction_factor)
+    #     lastindex = firstindex + 24 * int(1 / self.time_correction_factor)
+    #     day_number = self.day + 1
+    #     if day_number == 1:
+    #         ordinal = "st"
+    #     elif day_number == 2:
+    #         ordinal = "nd"
+    #     elif day_number == 3:
+    #         ordinal = "rd"
+    #     else:
+    #         ordinal = "th"
+    #     date = f"{self.label_months_lowercase[self.month]} {day_number}{ordinal}"
+    #     self.plot_title = f"{self.title} {date}"
+    #
+    #     if abs(lastindex - firstindex) < len(self.data):
+    #         data = self.data[firstindex:lastindex]
+    #         data_index = data.index[firstindex:lastindex]
+    #         data.index = data_index
+    #         return data
+    #     return self.data
 
     def close(self):
         """Closes a chart and saves."""
@@ -97,6 +123,10 @@ class ChartSingleDay(Chart, ChartFontsAndSize):
     def plot(self, close: Any) -> ReportImageEntry:
         """Plots a chart."""
         single_day_data = self.get_day_data()
+        if single_day_data is None or single_day_data.empty:
+            log.warning("No data available to plot for this day.")
+            return None
+        # single_day_data = self.get_day_data()
         plt.rcParams["font.size"] = "30"
         plt.rcParams["agg.path.chunksize"] = 10000
         _fig, a_x = plt.subplots(figsize=self.figsize, dpi=self.dpi)
