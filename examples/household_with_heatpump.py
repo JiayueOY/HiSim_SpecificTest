@@ -1,5 +1,6 @@
 """  Household system setup with only heatpump and without PV system. """
 # clean
+import datetime
 from typing import Optional, Any
 from dataclasses import dataclass
 from pathlib import Path
@@ -9,12 +10,15 @@ from utspclient.helpers.lpgdata import (
     Households,
     TransportationDeviceSets,
     TravelRouteSets,
-    EnergyIntensityType,
 )
-from utspclient.helpers.lpgpythonbindings import JsonReference
+from utspclient.helpers.lpgpythonbindings import (
+    EnergyIntensityType,
+    JsonReference,
+)
 from hisim.simulator import SimulationParameters
 from hisim.components import loadprofilegenerator_utsp_connector
 from hisim.components import weather
+
 from hisim.components import building
 from hisim.components import generic_heat_pump
 from hisim.components import electricity_meter
@@ -106,6 +110,15 @@ def setup_function(
     # Set Simulation Parameters
     year = 2021
     seconds_per_timestep = 60
+    if my_simulation_parameters is None:
+        my_simulation_parameters = SimulationParameters.january_only_with_customized_options(
+            year=year, seconds_per_timestep=seconds_per_timestep
+        )
+        my_simulation_parameters.single_day_plot_dates = [
+            datetime.datetime(year, 1, 1),
+            datetime.datetime(year, 1, 8)
+        ]
+    my_sim.set_simulation_parameters(my_simulation_parameters)
 
     # Set Occupancy
     data_acquisition_mode = my_config.data_acquisition_mode
