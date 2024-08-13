@@ -113,7 +113,6 @@ def setup_function(
         my_simulation_parameters = SimulationParameters.january_only_with_customized_options(
             year=year, seconds_per_timestep=seconds_per_timestep
         )
-        # 添加具体的日期
         my_simulation_parameters.single_day_plot_dates = [
             datetime.datetime(year, 1, 1),
             datetime.datetime(year, 1, 8)
