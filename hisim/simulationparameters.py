@@ -24,6 +24,7 @@ class SimulationParameters(JSONWizard):
     result_directory: str
     skip_finished_results: bool
     surplus_control: bool
+    single_day_plot_dates: Optional[List[datetime.datetime]] = None
 
     def __init__(
             self,
@@ -35,6 +36,7 @@ class SimulationParameters(JSONWizard):
             logging_level: int = log.LogPrio.INFORMATION,
             skip_finished_results: bool = False,
             surplus_control: bool = True,
+            single_day_plot_dates: Optional[List[datetime.datetime]] = None
     ):
         """Initializes the class."""
         self.start_date: datetime.datetime = start_date
@@ -51,6 +53,7 @@ class SimulationParameters(JSONWizard):
         self.result_directory: str = result_directory
         self.skip_finished_results: bool = skip_finished_results
         self.surplus_control = surplus_control
+        self.single_day_plot_dates = single_day_plot_dates if single_day_plot_dates else []
 
         self.figure_format = FigureFormat.PNG
 
@@ -88,6 +91,7 @@ class SimulationParameters(JSONWizard):
         self.post_processing_options.append(PostProcessingOptions.OPEN_DIRECTORY_IN_EXPLORER)
         self.post_processing_options.append(PostProcessingOptions.EXPORT_TO_CSV)
         self.post_processing_options.append(PostProcessingOptions.MAKE_NETWORK_CHARTS)
+        self.post_processing_options.append(PostProcessingOptions.COMPUTE_OPEX)
         self.post_processing_options.append(PostProcessingOptions.COMPUTE_CAPEX)
         self.post_processing_options.append(PostProcessingOptions.COMPUTE_KPIS_AND_WRITE_TO_REPORT)
 
@@ -113,6 +117,18 @@ class SimulationParameters(JSONWizard):
             "",
         )
         pars.enable_plots_only()
+        return pars
+
+    @classmethod
+    def full_year_with_customized_options(cls, year: int, seconds_per_timestep: int) -> SimulationParameters:
+        """Generates a parameter set for a full year with all the post processing, primarily for unit testing."""
+        pars = cls(
+            datetime.datetime(year, 1, 1),
+            datetime.datetime(year + 1, 1, 1),
+            seconds_per_timestep,
+            "",
+        )
+        pars.enable_customized_options()
         return pars
 
     @classmethod
