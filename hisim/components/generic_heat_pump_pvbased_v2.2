@@ -814,7 +814,7 @@ class GenericHeatPumpController(cp.Component):
             hours = int(time_in_minutes // 60) % 24
             minutes = int(time_in_minutes % 60)
 
-            if (hours == 10 and minutes >= 30) or (hours > 10 and hours < 13) or (hours == 13 and minutes < 30):
+            if (hours == 9 and minutes >= 0) or (hours > 9 and hours < 16) or (hours == 16 and minutes < 0):
                 if dhi > 0 and ghi / dhi >= 2:
                     max_temp = self.temperature_set_heating + 3
                     if temperature_mean_old < max_temp:
