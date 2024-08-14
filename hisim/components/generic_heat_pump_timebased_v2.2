@@ -707,12 +707,13 @@ class GenericHeatPumpController(cp.Component):
             minutes = int(time_in_minutes % 60)
 
             if (hours == 9 and minutes >= 0) or (hours > 9 and hours < 16) or (hours == 16 and minutes < 0):
-                max_temp = self.temperature_set_heating + 3
-                if temperature_mean_old < max_temp:
-                    self.controller_heatpumpmode = "heating"
+                if (hours == 10 and minutes >= 0) or (hours > 10 and hours < 14) or (hours == 14 and minutes < 0):
+                    max_temp = self.temperature_set_heating + 3
+                    if temperature_mean_old < max_temp:
+                        self.controller_heatpumpmode = "heating"
                 else:
                     self.controller_heatpumpmode = 'off'
-            elif hours == 13 and minutes == 30:
+            elif hours == 16 and minutes == 30:
                 if self.controller_heatpumpmode == "heating" and temperature_mean_old > self.temperature_set_heating:
                     self.controller_heatpumpmode = 'off'
             else:
