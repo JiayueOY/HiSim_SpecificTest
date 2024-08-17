@@ -51,27 +51,31 @@ class HouseholdPVConfig:
     pv_azimuth: float
     tilt: float
     pv_power: float
+    building_code: str
     total_base_area_in_m2: float
+    initial_internal_temperature_in_celsius: float
 
     @classmethod
     def get_default(cls):
         """Get default HouseholdPVConfig."""
 
         return HouseholdPVConfig(
-            pv_size=5,
-            building_type="blub",
-            household_type=Households.CHR01_Couple_both_at_Work,
-            energy_intensity=EnergyIntensityType.EnergySaving,
+            pv_size = 5,
+            building_type = "blub",
+            household_type = Households.CHR01_Couple_both_at_Work,
+            energy_intensity = EnergyIntensityType.EnergySaving,
             data_acquisition_mode = loadprofilegenerator_utsp_connector.LpgDataAcquisitionMode.USE_UTSP,
-            simulation_parameters=SimulationParameters.one_day_only(2022),
-            result_path="HiSim/results",
-            travel_route_set=TravelRouteSets.Travel_Route_Set_for_10km_Commuting_Distance,
-            transportation_device_set=TransportationDeviceSets.Bus_and_one_30_km_h_Car,
-            charging_station_set=ChargingStationSets.Charging_At_Home_with_11_kW,
-            pv_azimuth=180,
-            tilt=30,
-            pv_power=10000,
-            total_base_area_in_m2=121.2,
+            simulation_parameters = SimulationParameters.one_day_only(2022),
+            result_path = "HiSim/results",
+            travel_route_set = TravelRouteSets.Travel_Route_Set_for_10km_Commuting_Distance,
+            transportation_device_set = TransportationDeviceSets.Bus_and_one_30_km_h_Car,
+            charging_station_set = ChargingStationSets.Charging_At_Home_with_11_kW,
+            pv_azimuth = 180,
+            tilt = 30,
+            pv_power = 3250,
+            building_code = "GB.ENG.SFH.08.Gen.ReEx.001.002",
+            initial_internal_temperature_in_celsius = 19.0,
+            total_base_area_in_m2 = 149.0,
         )
 
 
@@ -128,6 +132,11 @@ def setup_function(
     transportation_device_set = my_config.transportation_device_set
     charging_station_set = my_config.charging_station_set
 
+    # Set Building
+    building_code = my_config.building_code
+    initial_internal_temperature_in_celsius = my_config.initial_internal_temperature_in_celsius
+    absolute_conditioned_floor_area_in_m2 = my_config.total_base_area_in_m2
+
     # Set Photovoltaic System
     power = my_config.pv_power
     azimuth = my_config.pv_azimuth
@@ -166,6 +175,16 @@ def setup_function(
         config=my_occupancy_config, my_simulation_parameters=my_simulation_parameters
     )
 
+    # Build Building
+    my_building_config = building.BuildingConfig.get_default_london_single_family_home()
+    my_building_config.building_code = building_code
+    my_building_config.initial_internal_temperature_in_celsius = initial_internal_temperature_in_celsius
+    my_building_config.absolute_conditioned_floor_area_in_m2 = absolute_conditioned_floor_area_in_m2
+
+    my_building = building.Building(
+        config=my_building_config,
+        my_simulation_parameters=my_simulation_parameters,
+    )
     # Build Weather
     my_weather = weather.Weather(
         config=weather.WeatherConfig.get_default(weather.LocationEnum.GB),
@@ -188,12 +207,6 @@ def setup_function(
     my_electricity_meter = electricity_meter.ElectricityMeter(
         my_simulation_parameters=my_simulation_parameters,
         config=electricity_meter.ElectricityMeterConfig.get_electricity_meter_default_config(),
-    )
-
-    # Build Building
-    my_building = building.Building(
-        config=building.BuildingConfig.get_default_london_single_family_home(),
-        my_simulation_parameters=my_simulation_parameters,
     )
 
     # Build Heat Pump Controller Config
