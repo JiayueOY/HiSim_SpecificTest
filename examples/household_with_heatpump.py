@@ -51,9 +51,9 @@ class HouseholdConfig:
     transportation_device_set: JsonReference
     charging_station_set: JsonReference
 
-
-
+    building_code: str
     total_base_area_in_m2: float
+    initial_internal_temperature_in_celsius: float
 
     @classmethod
     def get_default(cls):
@@ -73,7 +73,9 @@ class HouseholdConfig:
 
 
 
-            total_base_area_in_m2=121.2,
+            building_code="GB.ENG.SFH.08.Gen.ReEx.001.002",
+            initial_internal_temperature_in_celsius=19.0,
+            total_base_area_in_m2=149.0,
         )
 
 
@@ -108,7 +110,7 @@ def setup_function(
     # Set System Parameters
 
     # Set Simulation Parameters
-    year = 2021
+    year = 2022
     seconds_per_timestep = 60
     if my_simulation_parameters is None:
         my_simulation_parameters = SimulationParameters.january_only_with_customized_options(
@@ -129,8 +131,10 @@ def setup_function(
     transportation_device_set = my_config.transportation_device_set
     charging_station_set = my_config.charging_station_set
 
-
-
+    # Set Building
+    building_code = my_config.building_code
+    initial_internal_temperature_in_celsius = my_config.initial_internal_temperature_in_celsius
+    absolute_conditioned_floor_area_in_m2 = my_config.total_base_area_in_m2
     # Set Heat Pump Controller
     hp_mode = 2
 
@@ -170,7 +174,11 @@ def setup_function(
         my_simulation_parameters=my_simulation_parameters,
     )
 
-
+    # Build Building
+    my_building_config = building.BuildingConfig.get_default_london_single_family_home()
+    my_building_config.building_code = building_code
+    my_building_config.initial_internal_temperature_in_celsius = initial_internal_temperature_in_celsius
+    my_building_config.absolute_conditioned_floor_area_in_m2 = absolute_conditioned_floor_area_in_m2
 
     # Build Electricity Meter
     my_electricity_meter = electricity_meter.ElectricityMeter(
