@@ -68,7 +68,7 @@ class ChartSingleDay(Chart, ChartFontsAndSize):
 
     def get_day_data(self):
         """Extracts data for a single day."""
-        date_str = f"2021-{self.month:02d}-{self.day:02d}"
+        date_str = f"{self.year:02d}-{self.month:02d}-{self.day:02d}"
         log.information(f"Attempting to extract data for date: {date_str}")
 
         try:
