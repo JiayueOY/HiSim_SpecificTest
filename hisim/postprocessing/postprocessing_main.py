@@ -49,7 +49,7 @@ class PostProcessor:
         self.model: str = "HiSim"
         self.scenario: str = ""
         self.region: str = ""
-        self.year: int = 2021
+        self.year: int = 2022
 
     def set_dir_results(self, dirname: Optional[str] = None) -> None:
         """Sets the results directory."""
