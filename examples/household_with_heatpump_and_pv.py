@@ -110,7 +110,7 @@ def setup_function(
     # Set System Parameters
 
     # Set Simulation Parameters
-    year = 2021
+    year = 2022
     seconds_per_timestep = 60
 
     if my_simulation_parameters is None:
