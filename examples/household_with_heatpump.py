@@ -10,10 +10,7 @@ from utspclient.helpers.lpgdata import (
     Households,
     TransportationDeviceSets,
     TravelRouteSets,
-)
-from utspclient.helpers.lpgpythonbindings import (
     EnergyIntensityType,
-    JsonReference,
 )
 from hisim.simulator import SimulationParameters
 from hisim.components import loadprofilegenerator_utsp_connector
