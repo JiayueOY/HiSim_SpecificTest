@@ -72,7 +72,7 @@ class HouseholdPVConfig:
             charging_station_set = ChargingStationSets.Charging_At_Home_with_11_kW,
             pv_azimuth = 180,
             tilt = 30,
-            pv_power = 10000,
+            pv_power = 3250,
             building_code = "GB.ENG.SFH.08.Gen.ReEx.001.002",
             initial_internal_temperature_in_celsius = 19.0,
             total_base_area_in_m2 = 149.0,
