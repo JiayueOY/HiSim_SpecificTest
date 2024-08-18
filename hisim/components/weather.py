@@ -281,7 +281,7 @@ class LocationEnum(Enum):
         "London",
         "NSRDB_15min",
         "London",
-        "337089_51.49_-0.10_2019.csv",
+        "263928_55.97_-3.18_2022.csv",
         WeatherDataSourceEnum.NSRDB_15MIN,
     )
     CY = (
@@ -592,7 +592,13 @@ class Weather(Component):
             return
         if force_convergence:
             return
-        """ Performs the simulation. """
+
+        max_timestep = len(self.temperature_list) - 1
+
+        if timestep > max_timestep:
+            log.warning(f"Timestep {timestep} exceeds available data range. Maximum valid index is {max_timestep}.")
+            return
+
         stsv.set_output_value(self.air_temperature_output, self.temperature_list[timestep])
         stsv.set_output_value(self.dni_output, self.dni_list[timestep])
         stsv.set_output_value(self.dni_extra_output, self.dniextra_list[timestep])
@@ -601,25 +607,17 @@ class Weather(Component):
         stsv.set_output_value(self.altitude_output, self.altitude_list[timestep])
         stsv.set_output_value(self.azimuth_output, self.azimuth_list[timestep])
         stsv.set_output_value(self.wind_speed_output, self.wind_speed_list[timestep])
+        stsv.set_output_value(self.pressure_output, self.pressure_list[timestep] * 100)
         stsv.set_output_value(self.apparent_zenith_output, self.apparent_zenith_list[timestep])
-        stsv.set_output_value(
-            self.pressure_output, self.pressure_list[timestep] * 100
-        )  # *100 umrechnung von hPA bzw mbar in PA
-        stsv.set_output_value(self.apparent_zenith_output, self.apparent_zenith_list[timestep])
-        stsv.set_output_value(
-            self.daily_average_outside_temperature_output,
-            self.daily_average_outside_temperature_list_in_celsius[timestep],
-        )
+        stsv.set_output_value(self.daily_average_outside_temperature_output,
+                              self.daily_average_outside_temperature_list_in_celsius[timestep])
 
-        # set the temperature forecast
         if self.weather_config.predictive_control:
-            timesteps_24h = 24 * 3600 / self.my_simulation_parameters.seconds_per_timestep
-            last_forecast_timestep = int(timestep + timesteps_24h)
-            if last_forecast_timestep > len(self.temperature_list):
-                last_forecast_timestep = len(self.temperature_list)
-            # log.information( type(self.temperature))
+            timesteps_24h = int(24 * 3600 / self.my_simulation_parameters.seconds_per_timestep)
+            last_forecast_timestep = min(timestep + timesteps_24h, len(self.temperature_list))
             temperatureforecast = self.temperature_list[timestep:last_forecast_timestep]
             self.simulation_repository.set_entry(self.Weather_Temperature_Forecast_24h, temperatureforecast)
+
         self.last_timestep_with_update = timestep
 
     def i_prepare_simulation(self) -> None:
