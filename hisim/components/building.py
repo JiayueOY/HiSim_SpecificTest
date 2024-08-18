@@ -97,8 +97,8 @@ class BuildingConfig(cp.ConfigBase):
     @classmethod
     def get_default_london_single_family_home(
         cls,
-        set_heating_temperature_in_celsius: float = 16.0,
-        set_cooling_temperature_in_celsius: float = 24.0,
+        set_heating_temperature_in_celsius: float = 18.0,
+        set_cooling_temperature_in_celsius: float = 26.0,
         heating_reference_temperature_in_celsius: float = -7.0,
         max_thermal_building_demand_in_watt: Optional[float] = None,
     ) -> Any:
@@ -107,7 +107,7 @@ class BuildingConfig(cp.ConfigBase):
             name="Building",
             building_code="GB.ENG.SFH.07.Gen.ReEx.001.002",
             building_heat_capacity_class="medium",
-            initial_internal_temperature_in_celsius=17.0,
+            initial_internal_temperature_in_celsius=19.0,
             heating_reference_temperature_in_celsius=heating_reference_temperature_in_celsius,
             absolute_conditioned_floor_area_in_m2=121.2,
             max_thermal_building_demand_in_watt=max_thermal_building_demand_in_watt,
