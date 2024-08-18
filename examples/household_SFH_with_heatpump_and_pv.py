@@ -74,7 +74,7 @@ class HouseholdPVConfig:
             tilt = 30,
             pv_power = 3250,
             building_code = "GB.ENG.SFH.08.Gen.ReEx.001.002",
-            initial_internal_temperature_in_celsius = 17.0,
+            initial_internal_temperature_in_celsius = 19.0,
             total_base_area_in_m2 = 149.0,
         )
 
