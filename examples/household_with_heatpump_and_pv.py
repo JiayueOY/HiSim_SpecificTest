@@ -114,7 +114,7 @@ def setup_function(
     seconds_per_timestep = 60
 
     if my_simulation_parameters is None:
-        my_simulation_parameters = SimulationParameters.january_only_with_customized_options(
+        my_simulation_parameters = SimulationParameters.full_year_with_customized_options(
             year=year, seconds_per_timestep=seconds_per_timestep
         )
         my_simulation_parameters.single_day_plot_dates = [
