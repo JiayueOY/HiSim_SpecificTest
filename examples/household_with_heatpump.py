@@ -134,7 +134,7 @@ def setup_function(
     initial_internal_temperature_in_celsius = my_config.initial_internal_temperature_in_celsius
     absolute_conditioned_floor_area_in_m2 = my_config.total_base_area_in_m2
     # Set Heat Pump Controller
-    hp_mode = 2
+    hp_mode = 1
 
     # =================================================================================================================================
     # Build Components
