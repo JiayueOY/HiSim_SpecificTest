@@ -73,7 +73,7 @@ class HouseholdConfig:
 
             building_code="GB.ENG.TH.08.Gen.ReEx.001.002",
             initial_internal_temperature_in_celsius=17.0,
-            total_base_area_in_m2=149.0,
+            total_base_area_in_m2=98.0,
         )
 
 
