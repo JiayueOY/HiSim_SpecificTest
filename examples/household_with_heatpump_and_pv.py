@@ -143,7 +143,7 @@ def setup_function(
     tilt = my_config.tilt
 
     # Set Heat Pump Controller
-    hp_mode = 2
+    hp_mode = 1
 
     # =================================================================================================================================
     # Build Components
